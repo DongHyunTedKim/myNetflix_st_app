@@ -8,6 +8,7 @@
 
 import UIKit
 import Kingfisher
+import AVFoundation
 
 class SearchViewController: UIViewController {
 
@@ -43,7 +44,20 @@ extension SearchViewController: UICollectionViewDataSource {
 }
 
 extension SearchViewController: UICollectionViewDelegate {
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        // movie 아이템을 가지고
+        let movie = movies[indexPath.item]
+        let url = URL(string: movie.previewURL)!
+        let item = AVPlayerItem(url: url)
+        // player view controller를 띄워서
+        let sb = UIStoryboard(name: "Player", bundle: nil)
+        let vc = sb.instantiateViewController(identifier: "PlayerViewController") as! PlayerViewController
+        vc.modalPresentationStyle = .fullScreen
+        // player vc 에다가 movie를 전달하면 됨
+        vc.player.replaceCurrentItem(with: item)
+        present(vc,animated: false, completion: nil)
+    }
 }
 
 extension SearchViewController: UICollectionViewDelegateFlowLayout {
